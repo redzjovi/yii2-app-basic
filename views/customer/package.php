@@ -7,6 +7,7 @@ use kartik\select2\Select2;
 use wbraganca\dynamicform\DynamicFormWidget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\web\JqueryAsset;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
@@ -88,10 +89,22 @@ $this->params['breadcrumbs'][] = $this->title;
                                     <?= $form->field($customerPackageModel, "[{$i}]package_id")
                                     ->label($customerPackageModel->getAttributeLabel('package_name'))
                                     ->widget(Select2::class, [
-                                        'data' => ArrayHelper::map($packages, 'id', 'name'),
-                                        'options' => ['placeholder' => 'Select a package ...'],
+                                        'options' => [
+                                            'class' => 'package_name',
+                                            'placeholder' => 'Select a package ...',
+                                        ],
                                         'pluginOptions' => [
-                                            'allowClear' => true
+                                            'allowClear' => true,
+                                            'data' => ArrayHelper::toArray($packages, [
+                                                Package::class => [
+                                                    'id',
+                                                    'text' => function (Package $package) {
+                                                        return $package->name;
+                                                    },
+                                                    'name' => 'name',
+                                                    'price' => 'price',
+                                                ],
+                                            ]),
                                         ],
                                         'theme' => Select2::THEME_KRAJEE_BS4,
                                     ]) ?>
@@ -120,3 +133,9 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
 </div>
+
+<?php
+$this->registerJsFile(
+    '@web/js/customer/package.js',
+    ['depends' => [JqueryAsset::class], View::POS_READY]
+);
