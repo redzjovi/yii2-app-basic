@@ -9,6 +9,8 @@ use Yii;
  *
  * @property int $id
  * @property string $name
+ *
+ * @property CustomerPackage[] $customerPackages
  */
 class Customer extends \yii\db\ActiveRecord
 {
@@ -40,5 +42,15 @@ class Customer extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
         ];
+    }
+
+    /**
+     * Gets query for [[CustomerPackages]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCustomerPackages()
+    {
+        return $this->hasMany(CustomerPackage::className(), ['customer_id' => 'id']);
     }
 }

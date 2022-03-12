@@ -3,7 +3,9 @@
 namespace app\controllers;
 
 use app\models\Customer;
+use app\models\CustomerPackage;
 use app\models\CustomerSearch;
+use app\models\Package;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -130,5 +132,18 @@ class CustomerController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionPackage($id)
+    {
+        $customerModel = $this->findModel($id);
+        $customerPackageModels = [new CustomerPackage()];
+        $packages = Package::find()->all();
+
+        return $this->render('package', [
+            'customerModel' => $customerModel,
+            'customerPackageModels' => $customerPackageModels,
+            'packages' => $packages,
+        ]);
     }
 }
